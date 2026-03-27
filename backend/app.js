@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const {PORT = 3000} = process.env;
 const { login, createUser } = require('./controllers/users');
+const auth = require('./middlewares/auth');
 
 const app = express();
 
@@ -37,19 +38,11 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '698668e87914d868800976af'
-  };
-
-  next();
-});
-
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
 
-app.use('/users', usersRouter);
-app.use('/cards', cardsRouter);
+app.use('/users', auth, usersRouter);
+app.use('/cards', auth, cardsRouter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
