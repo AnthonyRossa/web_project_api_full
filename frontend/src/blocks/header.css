@@ -1,0 +1,22 @@
+.header {
+  padding-bottom: 4%;
+  border-bottom: 1px solid #545454;
+}
+
+.header__title {
+  width: 173px;
+  height: 33px;
+  background-image: url(../../images/logo.svg);
+}
+
+@media screen and (max-width: 600px) {
+  .header {
+    padding: 10% 0;
+  }
+
+  .header__title {
+    margin: 0 5%;
+    background-image: url(../../images/logo-mobile.svg);
+    background-repeat: no-repeat;
+  }
+}
