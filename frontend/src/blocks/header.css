@@ -1,12 +1,41 @@
 .header {
   padding-bottom: 4%;
   border-bottom: 1px solid #545454;
+  display: flex;
+  justify-content: space-between;
 }
 
 .header__title {
   width: 173px;
   height: 33px;
   background-image: url(../../images/logo.svg);
+}
+
+.header__nav {
+  display: flex;
+  align-items: center;
+}
+
+.header__email {
+  margin-right: 56px;
+}
+
+.header__logout {
+  color: #a9a9a9;
+  border: none;
+  cursor: pointer;
+}
+
+.header__register {
+  color: #a9a9a9;
+  border: none;
+  text-decoration: none;
+}
+
+.header__login {
+  color: #a9a9a9;
+  border: none;
+  text-decoration: none;
 }
 
 @media screen and (max-width: 600px) {

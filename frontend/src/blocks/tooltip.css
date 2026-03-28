@@ -1,0 +1,29 @@
+.popup__container_type_tooltip {
+  width: 430px;
+  padding: 60px 36px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 10px;
+  position: relative;
+}
+
+.popup__icon {
+  width: 120px;
+  height: 120px;
+  margin-bottom: 32px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #fff;
+}
+
+.popup__message {
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: center;
+  color: #000;
+  background-color: #fff;
+  margin: 0 auto;
+  max-width: 358px;
+}

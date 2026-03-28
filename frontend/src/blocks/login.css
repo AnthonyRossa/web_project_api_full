@@ -1,0 +1,46 @@
+.login {
+  position: relative;
+}
+
+.login__title {
+  color: white;
+  display: flex;
+  justify-content: center;
+  margin: 60px 0 50px 0;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.login__input {
+  width: 358px;
+  height: 27px;
+  padding: 13px 0;
+  color: white;
+  border: none;
+  border-bottom: white solid 1px;
+}
+
+.login__button {
+  background-color: white;
+  border: none;
+  width: 358px;
+  height: 50px;
+  margin: 216px 0 15px 0;
+  border-radius: 2px;
+}
+
+.login__register-text {
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.login__register-text:hover {
+  text-decoration: underline;
+}
