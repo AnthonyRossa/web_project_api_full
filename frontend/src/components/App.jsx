@@ -20,6 +20,8 @@ export default function App() {
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
   const [tooltipSuccess, setTooltipSuccess] = useState(false);
   const [tooltipMessage, setTooltipMessage] = useState("");
+  const [currentUser, setCurrentUser] = useState({});
+  const [token, setTokenState] = useState(null);
   const navigate = useNavigate();
 
   const handleRegistration = async ({ email, password }) => {
@@ -60,7 +62,8 @@ export default function App() {
       .authorize(email, password)
       .then((data) => {
         if (data.token) {
-          setToken(data.token);
+          setTokenState(data.token);
+          localStorage.setItem("jwt", data.token);
           setIsLoggedIn(true);
 
           return auth.checkToken(data.token);
@@ -81,16 +84,15 @@ export default function App() {
       .catch(console.error);
   };
 
-  const [currentUser, setCurrentUser] = useState({});
-
   useEffect(() => {
-    const token = getToken();
+    const token = localStorage.getItem("jwt");
     if (token) {
       auth
         .checkToken(token)
         .then((data) => {
           setCurrentUser(data.data);
           setIsLoggedIn(true);
+          setTokenState(token);
 
           return api.getUserInfo();
         })

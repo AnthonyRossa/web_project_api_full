@@ -1,7 +1,6 @@
 class Api {
   constructor(options) {
     this._baseUrl = options.baseUrl;
-    this._headers = options.headers;
   }
 
   _checkResponse(res) {
@@ -14,7 +13,9 @@ class Api {
 
   _makeRequest(endpoint, options = {}) {
     return fetch(`${this._baseUrl}${endpoint}`, {
-      headers: this._headers,
+      headers: {
+        authorization: `Bearer ${localStorage.getItem("jwt")}`
+      },
       ...options,
     }).then(this._checkResponse);
   }
@@ -30,7 +31,6 @@ class Api {
   setUserInfo(userData) {
     return this._makeRequest("/users/me", {
       method: "PATCH",
-      headers: this._headers,
       body: JSON.stringify({
         name: userData.name,
         about: userData.about,
@@ -41,7 +41,6 @@ class Api {
   addCard(cardData) {
     return this._makeRequest("/cards", {
       method: "POST",
-      headers: this._headers,
       body: JSON.stringify({
         name: cardData.name,
         link: cardData.link,
@@ -52,28 +51,24 @@ class Api {
   deleteCard(cardId) {
     return this._makeRequest(`/cards/${cardId}`, {
       method: "DELETE",
-      headers: this._headers,
     });
   }
 
   likeCard(cardId) {
-    return this._makeRequest(`cards/${cardId}/likes`, {
+    return this._makeRequest(`/cards/${cardId}/likes`, {
       method: "PUT",
-      headers: this._headers,
     });
   }
 
   unlikeCard(cardId) {
     return this._makeRequest(`/cards/${cardId}/likes`, {
       method: "DELETE",
-      headers: this._headers,
     });
   }
 
   changeAvatar(avatarData) {
     return this._makeRequest("/users/me/avatar", {
       method: "PATCH",
-      headers: this._headers,
       body: JSON.stringify({
         avatar: avatarData.avatar,
       }),
@@ -83,7 +78,6 @@ class Api {
   changeLikeCardStatus(cardId, isLiked) {
     return this._makeRequest(`/cards/${cardId}/likes`, {
       method: isLiked ? "PUT" : "DELETE",
-      headers: this._headers,
     });
   }
 }
@@ -91,7 +85,7 @@ class Api {
 const api = new Api({
   baseUrl: "https://around-api.pt-br.tripleten-services.com/v1",
   headers: {
-    authorization: "25e44c37-6a52-4a3b-872e-f535279302d8",
+    authorization: `Bearer ${localStorage.getItem("jwt")}`,
     "Content-Type": "application/json",
   },
 });
