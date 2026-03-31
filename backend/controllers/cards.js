@@ -1,40 +1,35 @@
 const Card = require('../models/card');
 const { ERROR_CODE_400, ERROR_CODE_404, ERROR_CODE_500, ERROR_CODE_403 } = require('../utils/constants');
+const ValidationError = require('../errors/validation-err');
+const NotFoundError = require('../errors/not-found-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find()
     .then(cards => res.send(cards))
-    .catch(err => {
-      res.status(ERROR_CODE_500).send({ message: 'Erro interno do servidor' });
-    });
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
   Card.create({ name, link, owner })
     .then(card => res.status(201).send(card))
     .catch(err => {
       if (err.name === 'ValidationError') {
-        return res.status(ERROR_CODE_400).send({ message: 'Dados do card inválidos' });
+        return next(new ValidationError('Dados do card inválidos'));
       }
-      res.status(ERROR_CODE_500).send({ message: 'Erro interno do servidor' });
+      next(err);
     });
 }
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findById(cardId)
-    .orFail(() => {
-      const error = new Error('Card não encontrado');
-      error.statusCode = ERROR_CODE_404;
-      throw error;
-    })
+    .orFail(() => new NotFoundError('Card não encontrado'))
     .then(card => {
         if (card.owner.toString() !== req.user._id) {
-          const error = new Error('Permissão negada para deletar este card');
-          error.statusCode = ERROR_CODE_403;
-          throw error;
+          throw new ForbiddenError('Permissão negada para deletar este card');
       }
 
       return Card.findByIdAndDelete(cardId);
@@ -44,51 +39,43 @@ const deleteCard = (req, res) => {
     })
     .catch(err => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_400).send({ message: 'ID do card inválido' });
+        return next(new ValidationError('ID do card inválido'));
       }
-      res.status(ERROR_CODE_500).send({ message: 'Erro interno do servidor' });
+      next(err);
     });
 }
 
-const LikeCard = (req, res) => {
+const LikeCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
     cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true }
   )
-  .orFail(() => {
-    const error = new Error('Card não encontrado');
-    error.statusCode = ERROR_CODE_404;
-    throw error;
-  })
+  .orFail(() => new NotFoundError('Card não encontrado'))
     .then(card => res.send(card))
     .catch(err => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_400).send({ message: 'ID do card inválido' });
+        return next(new ValidationError('ID do card inválido'));
       }
-      res.status(ERROR_CODE_500).send({ message: 'Erro interno do servidor' });
+      next(err);
     });
 }
 
-const DislikeCard = (req, res) => {
+const DislikeCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
     cardId,
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-  .orFail(() => {
-    const error = new Error('Card não encontrado');
-    error.statusCode = ERROR_CODE_404;
-    throw error;
-  })
+  .orFail(() => new NotFoundError('Card não encontrado'))
     .then(card => res.send(card))
     .catch(err => {
       if (err.name === 'CastError') {
-        return res.status(ERROR_CODE_400).send({ message: 'ID do card inválido' });
+        return next(new ValidationError('ID do card inválido'));
       }
-      res.status(ERROR_CODE_500).send({ message: 'Erro interno do servidor' });
+      next(err);
     });
 }
 

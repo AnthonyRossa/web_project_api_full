@@ -5,6 +5,8 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const cors = require('cors');
 const app = express();
+const errorHandler = require('./middlewares/error-handler');
+const NotFoundError = require('./errors/not-found-err');
 
 app.use(express.json());
 app.use(cors());
@@ -57,32 +59,11 @@ app.get('/crash-test', () => {
 app.post('/signin', login);
 app.post('/signup', createUser);
 
-
-app.use((req, res) => {
-  res.status(404).json({ message: 'A solicitação não foi encontrada'});
+app.use((req, res, next) => {
+  next(new NotFoundError('A solicitação não foi encontrada'));
 });
 
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500 ? 'Ocorreu um erro no servidor' : message
-  });
-});
-
-app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
-
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'Ocorreu um erro no servidor'
-        : message
-    });
-});
+app.use(errorHandler);
 
 app.listen(PORT, () => {
     console.log(`App listening at port ${PORT}`);
