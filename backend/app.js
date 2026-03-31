@@ -7,6 +7,7 @@ const cors = require('cors');
 const app = express();
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/not-found-err');
+const { errors } = require('celebrate');
 
 app.use(express.json());
 app.use(cors());
@@ -58,6 +59,8 @@ app.get('/crash-test', () => {
 
 app.post('/signin', login);
 app.post('/signup', createUser);
+
+app.use(errors());
 
 app.use((req, res, next) => {
   next(new NotFoundError('A solicitação não foi encontrada'));
