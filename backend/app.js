@@ -8,10 +8,12 @@ const app = express();
 const errorHandler = require('./middlewares/error-handler');
 const NotFoundError = require('./errors/not-found-err');
 const { errors } = require('celebrate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 app.use(express.json());
 app.use(cors());
 app.options('*', cors());
+app.use(requestLogger);
 
 mongoose.connect('mongodb://localhost:27017/aroundb');
 
@@ -66,6 +68,7 @@ app.use((req, res, next) => {
   next(new NotFoundError('A solicitação não foi encontrada'));
 });
 
+app.use(errorLogger);
 app.use(errorHandler);
 
 app.listen(PORT, () => {

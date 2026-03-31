@@ -2,16 +2,9 @@ const express = require('express');
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { getUsers, getUserById, updateUser, updateAvatar } = require('../controllers/users');
+const { validateURL } = require('../utils/validation');
 
-router.get('/', celebrate({
-  body: Joi.object().keys({
-    name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
-    avatar: Joi.string().required().custom(validateURL),
-    email: Joi.string().required().email(),
-    password: Joi.string().required().min(8),
-  })
-}), getUsers);
+router.get('/', getUsers);
 
 router.get('/:userId', celebrate({
   params: Joi.object().keys({
@@ -28,7 +21,12 @@ router.patch('/:userId', celebrate({
 
 router.patch('/:userId/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().custom(validateURL),
+    avatar: Joi.string().required().custom((value, helpers) => {
+      if (!validateURL(value, helpers)) {
+        return helpers.error('string.uri');
+      }
+      return value;
+    }),
   })
 }), updateAvatar);
 
