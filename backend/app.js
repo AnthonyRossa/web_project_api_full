@@ -3,10 +3,12 @@ const mongoose = require('mongoose');
 const {PORT = 3000} = process.env;
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
-
+const cors = require('cors');
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+app.options('*', cors());
 
 mongoose.connect('mongodb://localhost:27017/aroundb');
 
@@ -17,7 +19,8 @@ app.use(function(req, res, next) {
   const allowedCords = [
   'https://tripleten.tk',
   'http://tripleten.tk',
-  'localhost:3000'
+  'localhost:3000',
+  'localhost:3001'
   ];
 
   const DEFAULT_ALLOWED_METHODS = "GET,HEAD,PUT,PATCH,POST,DELETE";
@@ -67,6 +70,18 @@ app.use((err, req, res, next) => {
     .send({
       message: statusCode === 500 ? 'Ocorreu um erro no servidor' : message
   });
+});
+
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+
+  res
+    .status(statusCode)
+    .send({
+      message: statusCode === 500
+        ? 'Ocorreu um erro no servidor'
+        : message
+    });
 });
 
 app.listen(PORT, () => {

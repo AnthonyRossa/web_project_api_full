@@ -83,7 +83,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "https://around-api.pt-br.tripleten-services.com/v1",
+  baseUrl: "http://localhost:3000",
   headers: {
     authorization: `Bearer ${localStorage.getItem("jwt")}`,
     "Content-Type": "application/json",
