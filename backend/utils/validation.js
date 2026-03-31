@@ -7,3 +7,5 @@ const validateURL = (value, helpers) => {
   }
   return helpers.error('string.uri');
 }
+
+module.exports = { validateURL };

@@ -95,4 +95,11 @@ const updateAvatar = (req, res, next) => {
   });
 };
 
-module.exports = { getUsers, getUserById, createUser, updateUser, updateAvatar, login };
+const getCurrentUser = (req, res, next) => {
+  User.findById(req.user._id)
+  .orFail(() => new NotFoundError('Usuário não encontrado'))
+  .then(user => res.send({ data: user }))
+  .catch(next);
+};
+
+module.exports = { getUsers, getUserById, createUser, updateUser, updateAvatar, login, getCurrentUser };

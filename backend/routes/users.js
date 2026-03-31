@@ -1,8 +1,10 @@
 const express = require('express');
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { getUsers, getUserById, updateUser, updateAvatar } = require('../controllers/users');
+const { getUsers, getUserById, updateUser, updateAvatar, getCurrentUser } = require('../controllers/users');
 const { validateURL } = require('../utils/validation');
+
+router.get('/me', getCurrentUser);
 
 router.get('/', getUsers);
 
@@ -12,21 +14,16 @@ router.get('/:userId', celebrate({
   })
 }), getUserById);
 
-router.patch('/:userId', celebrate({
+router.patch('/me', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
   })
 }), updateUser);
 
-router.patch('/:userId/avatar', celebrate({
+router.patch('/me/avatar', celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().custom((value, helpers) => {
-      if (!validateURL(value, helpers)) {
-        return helpers.error('string.uri');
-      }
-      return value;
-    }),
+    avatar: Joi.string().required().custom(validateURL),
   })
 }), updateAvatar);
 

@@ -14,6 +14,7 @@ class Api {
   _makeRequest(endpoint, options = {}) {
     return fetch(`${this._baseUrl}${endpoint}`, {
       headers: {
+        "Content-Type": "application/json",
         authorization: `Bearer ${localStorage.getItem("jwt")}`
       },
       ...options,

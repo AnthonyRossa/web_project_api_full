@@ -147,7 +147,11 @@ export default function App() {
       await api
         .addCard(data)
         .then((newCard) => {
-          setCards([newCard, ...cards]);
+          const cardWithLikeStatus = {
+            ...newCard,
+            isLiked: newCard.likes.includes(currentUser._id)
+          };
+          setCards([cardWithLikeStatus, ...cards]);
           handleClosePopup();
         })
         .catch((error) => console.error(error));
@@ -170,10 +174,14 @@ export default function App() {
     api
       .getInitialCards()
       .then((cardsData) => {
-        setCards(cardsData);
+        const cardsWithLikeStatus = cardsData.map(card => ({
+          ...card,
+          isLiked: card.likes.includes(currentUser._id)
+        }));
+        setCards(cardsWithLikeStatus);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [currentUser._id]);
 
   async function handleCardLike(card) {
     const isLiked = card.isLiked;
@@ -181,9 +189,13 @@ export default function App() {
     await api
       .changeLikeCardStatus(card._id, !isLiked)
       .then((newCard) => {
+        const updatedCard = {
+          ...newCard,
+          isLiked: newCard.likes.includes(currentUser._id)
+        };
         setCards((state) =>
           state.map((currentCard) =>
-            currentCard._id === card._id ? newCard : currentCard,
+            currentCard._id === card._id ? updatedCard : currentCard,
           ),
         );
       })
