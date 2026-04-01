@@ -24,6 +24,8 @@ app.use(function(req, res, next) {
   const allowedCords = [
   'https://tripleten.tk',
   'http://tripleten.tk',
+  'https://arttatu.chickenkiller.com',
+  'http://arttatu.chickenkiller.com',
   'localhost:3000',
   'localhost:3001'
   ];

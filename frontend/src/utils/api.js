@@ -1,3 +1,7 @@
+const BASE_URL = process.env.NODE_ENV === 'production'
+  ? "https://api.arttatu.chickenkiller.com"
+  : "http://localhost:3000";
+
 class Api {
   constructor(options) {
     this._baseUrl = options.baseUrl;
@@ -84,7 +88,7 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: "http://localhost:3000",
+  baseUrl: BASE_URL,
   headers: {
     authorization: `Bearer ${localStorage.getItem("jwt")}`,
     "Content-Type": "application/json",
