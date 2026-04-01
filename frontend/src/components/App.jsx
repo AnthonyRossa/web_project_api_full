@@ -69,7 +69,7 @@ export default function App() {
       })
       .then((userData) => {
         if (userData) {
-          setCurrentUser(userdata);
+          setCurrentUser(userData);
           return api.getUserInfo();
         }
       })
