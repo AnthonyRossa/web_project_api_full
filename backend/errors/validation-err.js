@@ -1,7 +1,9 @@
+const { ERROR_CODE_400 } = require('../utils/errorCodes');
+
 class ValidationError extends Error {
   constructor(message) {
     super(message);
-    this.statusCode = 400;
+    this.statusCode = ERROR_CODE_400;
     this.name = 'ValidationError';
   }
 }

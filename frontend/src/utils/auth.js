@@ -1,6 +1,4 @@
-export const BASE_URL = process.env.NODE_ENV === 'production'
-  ? "https://api.arttatu.chickenkiller.com"
-  : "http://localhost:3000";
+import { BASE_URL } from "./url";
 
 export const register = (email, password) => {
   return fetch(`${BASE_URL}/signup`, {

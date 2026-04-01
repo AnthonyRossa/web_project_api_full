@@ -1,8 +1,8 @@
 const Card = require('../models/card');
-const { ERROR_CODE_400, ERROR_CODE_404, ERROR_CODE_500, ERROR_CODE_403 } = require('../utils/constants');
 const ValidationError = require('../errors/validation-err');
 const NotFoundError = require('../errors/not-found-err');
 const ForbiddenError = require('../errors/forbidden-err');
+const { handleCardError } = require('../utils/errorHandler');
 
 const getCards = (req, res, next) => {
   Card.find()
@@ -45,7 +45,7 @@ const deleteCard = (req, res, next) => {
     });
 }
 
-const LikeCard = (req, res, next) => {
+const likeCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
     cardId,
@@ -54,15 +54,10 @@ const LikeCard = (req, res, next) => {
   )
   .orFail(() => new NotFoundError('Card não encontrado'))
     .then(card => res.send(card))
-    .catch(err => {
-      if (err.name === 'CastError') {
-        return next(new ValidationError('ID do card inválido'));
-      }
-      next(err);
-    });
+    .catch(err => handleCardError(err, next));
 }
 
-const DislikeCard = (req, res, next) => {
+const dislikeCard = (req, res, next) => {
   const { cardId } = req.params;
   Card.findByIdAndUpdate(
     cardId,
@@ -71,12 +66,7 @@ const DislikeCard = (req, res, next) => {
   )
   .orFail(() => new NotFoundError('Card não encontrado'))
     .then(card => res.send(card))
-    .catch(err => {
-      if (err.name === 'CastError') {
-        return next(new ValidationError('ID do card inválido'));
-      }
-      next(err);
-    });
+    .catch(err => handleCardError(err, next));
 }
 
-module.exports = { getCards, createCard, deleteCard, LikeCard, DislikeCard };
+module.exports = { getCards, createCard, deleteCard, likeCard, dislikeCard };

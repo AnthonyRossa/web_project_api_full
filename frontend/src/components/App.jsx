@@ -7,14 +7,12 @@ import Login from "./Login/Login";
 import api from "../utils/api.js";
 import CurrentUserContext from "../contexts/CurrentUserContext.js";
 import * as auth from "../utils/auth.js";
-import { register, authorize, checkToken } from "../utils/auth.js";
-import { setToken, getToken, removeToken } from "../utils/token.js";
+import { removeToken } from "../utils/token.js";
 import Register from "./Register/Register.jsx";
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute.jsx";
 import InfoTooltip from "./InfoTooltip/InfoTooltip.jsx";
 
 export default function App() {
-  const [userData, setUserData] = useState({ email: "", password: "" });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [showInfoTooltip, setShowInfoTooltip] = useState(false);
@@ -71,7 +69,7 @@ export default function App() {
       })
       .then((userData) => {
         if (userData) {
-          setCurrentUser(userData.data);
+          setCurrentUser(userdata);
           return api.getUserInfo();
         }
       })
@@ -90,7 +88,7 @@ export default function App() {
       auth
         .checkToken(token)
         .then((data) => {
-          setCurrentUser(data.data);
+          setCurrentUser(data);
           setIsLoggedIn(true);
           setTokenState(token);
 
@@ -119,43 +117,37 @@ export default function App() {
   };
 
   const handleUpdateUser = (data) => {
-    (async () => {
-      await api
-        .setUserInfo(data)
-        .then((newData) => {
-          setCurrentUser(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
+    api
+      .setUserInfo(data)
+      .then((newData) => {
+        setCurrentUser(newData);
+        handleClosePopup();
+      })
+      .catch((error) => console.error(error));
   };
 
   const handleUpdateAvatar = (data) => {
-    (async () => {
-      await api
-        .changeAvatar(data)
-        .then((newUserData) => {
-          setCurrentUser(newUserData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
+    api
+      .changeAvatar(data)
+      .then((newUserData) => {
+        setCurrentUser(newUserData);
+        handleClosePopup();
+      })
+      .catch((error) => console.error(error));
   };
 
   const handleAddPlaceSubmit = (data) => {
-    (async () => {
-      await api
-        .addCard(data)
-        .then((newCard) => {
-          const cardWithLikeStatus = {
-            ...newCard,
-            isLiked: newCard.likes.includes(currentUser._id)
-          };
-          setCards([cardWithLikeStatus, ...cards]);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
+    api
+      .addCard(data)
+      .then((newCard) => {
+        const cardWithLikeStatus = {
+          ...newCard,
+          isLiked: newCard.likes.includes(currentUser._id),
+        };
+        setCards([cardWithLikeStatus, ...cards]);
+        handleClosePopup();
+      })
+      .catch((error) => console.error(error));
   };
 
   const [popup, setPopup] = useState(null);
@@ -174,9 +166,9 @@ export default function App() {
     api
       .getInitialCards()
       .then((cardsData) => {
-        const cardsWithLikeStatus = cardsData.map(card => ({
+        const cardsWithLikeStatus = cardsData.map((card) => ({
           ...card,
-          isLiked: card.likes.includes(currentUser._id)
+          isLiked: card.likes.includes(currentUser._id),
         }));
         setCards(cardsWithLikeStatus);
       })
@@ -191,7 +183,7 @@ export default function App() {
       .then((newCard) => {
         const updatedCard = {
           ...newCard,
-          isLiked: newCard.likes.includes(currentUser._id)
+          isLiked: newCard.likes.includes(currentUser._id),
         };
         setCards((state) =>
           state.map((currentCard) =>

@@ -1,6 +1,5 @@
-const BASE_URL = process.env.NODE_ENV === 'production'
-  ? "https://api.arttatu.chickenkiller.com"
-  : "http://localhost:3000";
+import { BASE_URL } from "./url";
+  import { getToken } from "./token";
 
 class Api {
   constructor(options) {
@@ -19,7 +18,7 @@ class Api {
     return fetch(`${this._baseUrl}${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${localStorage.getItem("jwt")}`
+        authorization: `Bearer ${getToken()}`
       },
       ...options,
     }).then(this._checkResponse);
@@ -90,7 +89,7 @@ class Api {
 const api = new Api({
   baseUrl: BASE_URL,
   headers: {
-    authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    authorization: `Bearer ${getToken()}`,
     "Content-Type": "application/json",
   },
 });

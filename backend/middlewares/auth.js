@@ -1,6 +1,5 @@
 const Jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../utils/config');
-const { ERROR_CODE_401 } = require('../utils/constants');
+const { ERROR_CODE_401 } = require('../utils/errorCodes');
 
 const auth = (req, res, next) => {
     const { authorization } = req.headers;
@@ -12,7 +11,7 @@ const auth = (req, res, next) => {
     const token = authorization.replace('Bearer ', '');
 
     try {
-        const payload = Jwt.verify(token, JWT_SECRET);
+        const payload = Jwt.verify(token, process.env.JWT_SECRET);
         req.user = payload;
         next();
     } catch (err) {

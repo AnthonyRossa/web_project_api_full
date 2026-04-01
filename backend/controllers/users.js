@@ -1,8 +1,6 @@
 const User = require('../models/user');
-const { ERROR_CODE_400, ERROR_CODE_404, ERROR_CODE_500, ERROR_CODE_409, ERROR_CODE_401 } = require('../utils/constants');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { JWT_SECRET } = require('../utils/config');
 const ValidationError = require('../errors/validation-err');
 const AuthError = require('../errors/auth-err');
 const ConflictError = require('../errors/conflict-err');
@@ -39,13 +37,13 @@ const login = (req, res, next) => {
     }
 
     return bcrypt.compare(password, user.password)
-    .then(usPasswordValid => {
-      if(!usPasswordValid) {
+    .then(isPasswordValid => {
+      if(!isPasswordValid) {
         return next(new AuthError('E-mail ou senha incorretos'));
       }
 
       const token = jwt.sign({ _id: user._id },
-        JWT_SECRET,
+        process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
 
@@ -98,7 +96,7 @@ const updateAvatar = (req, res, next) => {
 const getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
   .orFail(() => new NotFoundError('Usuário não encontrado'))
-  .then(user => res.send({ data: user }))
+  .then(user => res.send(user))
   .catch(next);
 };
 
