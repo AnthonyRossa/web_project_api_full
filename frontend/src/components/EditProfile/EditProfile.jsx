@@ -44,7 +44,7 @@ export default function EditProfile() {
           placeholder="Nome"
           required
           minLength="2"
-          maxLength="40"
+          maxLength="30"
           value={name}
           onChange={handleNameChange}
         />
@@ -59,7 +59,7 @@ export default function EditProfile() {
           placeholder="Sobre mim"
           required
           minLength="2"
-          maxLength="200"
+          maxLength="30"
           value={description}
           onChange={handleDescriptionChange}
         />
