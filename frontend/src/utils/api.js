@@ -1,5 +1,5 @@
 import { BASE_URL } from "./url";
-  import { getToken } from "./token";
+import { getToken } from "./token";
 
 class Api {
   constructor(options) {
@@ -18,7 +18,7 @@ class Api {
     return fetch(`${this._baseUrl}${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${getToken()}`
+        authorization: `Bearer ${getToken()}`,
       },
       ...options,
     }).then(this._checkResponse);
