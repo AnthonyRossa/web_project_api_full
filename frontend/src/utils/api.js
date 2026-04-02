@@ -15,10 +15,14 @@ class Api {
   }
 
   _makeRequest(endpoint, options = {}) {
+    const token = getToken();
+    if (!token) {
+      return Promise.reject("No token found");
+    }
     return fetch(`${this._baseUrl}${endpoint}`, {
       headers: {
         "Content-Type": "application/json",
-        authorization: `Bearer ${getToken()}`,
+        authorization: `Bearer ${token}`,
       },
       ...options,
     }).then(this._checkResponse);
