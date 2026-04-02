@@ -94,7 +94,7 @@ export default function Main({
         <ul className="cards__list">
           {cards.map((card) => (
             <Card
-              key={card._id}
+              key={card._id || Math.random()}
               card={card}
               handleOpenPopup={handleOpenImagePopup}
               onCardLike={() => onCardLike(card)}

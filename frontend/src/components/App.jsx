@@ -140,6 +140,8 @@ export default function App() {
     api
       .addCard(data)
       .then((newCard) => {
+        if (!currentUser?._id) return;
+
         const cardWithLikeStatus = {
           ...newCard,
           isLiked: newCard.likes.includes(currentUser._id),
@@ -163,6 +165,8 @@ export default function App() {
   const [cards, setCards] = useState([]);
 
   useEffect(() => {
+    if (!currentUser?._id) return;
+
     api
       .getInitialCards()
       .then((cardsData) => {
@@ -176,6 +180,7 @@ export default function App() {
   }, [currentUser._id]);
 
   async function handleCardLike(card) {
+    if (!currentUser?._id) return;
     const isLiked = card.isLiked;
 
     await api
