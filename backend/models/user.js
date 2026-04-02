@@ -6,11 +6,13 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'Jacques Cousteau',
     minLength: 2,
+    required: true,
     maxLength: 30,
   },
   about: {
     type: String,
     default: 'Explorer',
+    required: true,
     minLength: 2,
     maxLength: 30,
   },
