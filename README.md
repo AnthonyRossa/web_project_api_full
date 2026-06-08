@@ -1,4 +1,4 @@
-# Tripleten web_project_api_full
+# Tripleten Around The U.S
 
 A full-stack web application built with **React**, **Node.js**, **Express**, **MongoDB**, and **Jest**. 
 This project serves as a comprehensive demonstration of my full-stack development skills acquired during the **TripleTen** bootcamp, featuring a robust single-profile CRUD system.
